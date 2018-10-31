@@ -10,7 +10,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 VENDOR_DIR="$BUILD_DIR/vendor"
 INSTALL_DIR="$VENDOR_DIR/imagemagick"
-IMAGE_MAGICK_VERSION="${IMAGE_MAGICK_VERSION:-7.0.5-5}"
+IMAGE_MAGICK_VERSION="${IMAGE_MAGICK_VERSION:-7.0.6-10}"
 CACHE_FILE="$CACHE_DIR/imagemagick-$IMAGE_MAGICK_VERSION.tar.gz"
 
 if [ ! -f $CACHE_FILE ]; then
@@ -57,25 +57,6 @@ else
   mkdir -p $VENDOR_DIR
   tar xzf $CACHE_FILE -C $VENDOR_DIR
 fi
-
-echo "-----> Writing policy file"
-mkdir -p $INSTALL_DIR/etc/ImageMagick
-cat > $INSTALL_DIR/policy.xml <<EOF
-<policymap>
-  <policy domain="coder" rights="none" pattern="EPHEMERAL" />
-  <policy domain="coder" rights="none" pattern="HTTPS" />
-  <policy domain="coder" rights="none" pattern="MVG" />
-  <policy domain="coder" rights="none" pattern="MSL" />
-</policymap>
-EOF
-
-echo "-----> Writing config file"
-cat > $INSTALL_DIR/magic.xml <<EOF
-<magicmap>
- <magic name="JPEG" offset="0" target="\377\330\377"/> 
- <magic name="PNG" offset="0" target="\211PNG\r\n\032\n"/> 
-</magicmap>
-EOF
 
 # update PATH and LD_LIBRARY_PATH
 echo "-----> Updating environment variables"
